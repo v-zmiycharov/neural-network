@@ -9,6 +9,10 @@ namespace NeuralNetwork
     {
         static void Main(string[] args)
         {
+            Roads.Initiate();
+            Helpers.ReadTrainFile();
+
+            Console.ReadKey();
         }
     }
 }
