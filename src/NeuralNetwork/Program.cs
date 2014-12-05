@@ -18,6 +18,7 @@ namespace NeuralNetwork
                 {
                     Helpers.TrainItems[j].CalculateLayerValues();
                     Helpers.TrainItems[j].CalculateLayerMistakes();
+                    Helpers.TrainItems[j].UpdateRoads();
                 }
             }
 

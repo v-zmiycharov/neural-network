@@ -49,5 +49,23 @@ namespace NeuralNetwork
             double calculatedValue = this.OutputLayer.Value;
             this.OutputLayer.Mistake = calculatedValue * (1 - calculatedValue) * (this.Value - calculatedValue);
         }
+
+        public void UpdateRoads()
+        {
+            for (int i = 0; i < Constants.ATTRIBUTES_COUNT; i++)
+            {
+                for (int j = 0; j < Constants.MIDDLE_LAYER_NEURONS_COUNT; j++)
+                {
+                    double currentValue = Roads.GetInitial(i, j);
+                    Roads.SetInitial(i, j, currentValue + Constants.CALCULATION_M * this.MiddleLayer[j].Mistake * this.Attributes[i]);
+                }
+            }
+
+            for (int i = 0; i < Constants.MIDDLE_LAYER_NEURONS_COUNT; i++)
+            {
+                double currentValue = Roads.GetLast(i);
+                Roads.SetLast(i, currentValue + Constants.CALCULATION_M * this.OutputLayer.Mistake * this.MiddleLayer[i].Value);
+            }
+        }
     }
 }
