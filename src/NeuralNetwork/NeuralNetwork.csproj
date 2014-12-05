@@ -50,6 +50,8 @@
     <Compile Include="Roads.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="iris_test.txt" />
+    <Content Include="iris_test_result.txt" />
     <Content Include="iris_train.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

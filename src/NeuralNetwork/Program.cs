@@ -22,6 +22,8 @@ namespace NeuralNetwork
                 }
             }
 
+            Helpers.ReadTestFile();
+
             Console.ReadKey();
         }
     }
