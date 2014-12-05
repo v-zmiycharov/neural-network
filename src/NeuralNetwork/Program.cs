@@ -12,6 +12,14 @@ namespace NeuralNetwork
             Roads.Initiate();
             Helpers.ReadTrainFile();
 
+            for (int i = 0; i < Constants.LEARNING_ITERATIONS_COUNT; i++)
+            {
+                for (int j = 0; j < Helpers.TrainItems.Count; j++)
+                {
+                    Helpers.TrainItems[j].CalculateLayerValues();
+                }
+            }
+
             Console.ReadKey();
         }
     }
