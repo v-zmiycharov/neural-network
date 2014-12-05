@@ -17,6 +17,7 @@ namespace NeuralNetwork
                 for (int j = 0; j < Helpers.TrainItems.Count; j++)
                 {
                     Helpers.TrainItems[j].CalculateLayerValues();
+                    Helpers.TrainItems[j].CalculateLayerMistakes();
                 }
             }
 
