@@ -9,7 +9,7 @@ namespace NeuralNetwork
     {
         public const int MIDDLE_LAYER_NEURONS_COUNT = 4;
         public const int OUTPUT_LAYER_NEURONS_COUNT = 3;
-        public const int LEARNING_ITERATIONS_COUNT = 5;
+        public const int LEARNING_ITERATIONS_COUNT = 25;
         public const double CALCULATION_M = 0.1;
         public const double INITIAL_SETUP_MIN = -0.05;
         public const double INITIAL_SETUP_MAX = 0.05;
