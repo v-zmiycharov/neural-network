@@ -9,7 +9,7 @@ namespace NeuralNetwork
     {
         private static double[][] InitialRoads { get; set; }
 
-        private static double[] LastRoads { get; set; }
+        private static double[][] LastRoads { get; set; }
 
         public static void Initiate()
         {
@@ -23,11 +23,16 @@ namespace NeuralNetwork
                 }
             }
 
-            LastRoads = new double[Constants.MIDDLE_LAYER_NEURONS_COUNT];
+            LastRoads = new double[Constants.MIDDLE_LAYER_NEURONS_COUNT][];
             for (int i = 0; i < LastRoads.Length; i++)
             {
-                LastRoads[i] = Helpers.GetRandom(Constants.INITIAL_SETUP_MIN, Constants.INITIAL_SETUP_MAX);
+                LastRoads[i] = new double[Constants.OUTPUT_LAYER_NEURONS_COUNT];
+                for (int j = 0; j < LastRoads[i].Length; j++)
+                {
+                    LastRoads[i][j] = Helpers.GetRandom(Constants.INITIAL_SETUP_MIN, Constants.INITIAL_SETUP_MAX);
+                }
             }
+
         }
 
         public static double GetInitial(int i, int j)
@@ -35,9 +40,9 @@ namespace NeuralNetwork
             return InitialRoads[i][j];
         }
 
-        public static double GetLast(int i)
+        public static double GetLast(int i, int j)
         {
-            return LastRoads[i];
+            return LastRoads[i][j];
         }
 
         public static void SetInitial(int i, int j, double value)
@@ -45,9 +50,9 @@ namespace NeuralNetwork
             InitialRoads[i][j] = value;
         }
 
-        public static void SetLast(int i, double value)
+        public static void SetLast(int i, int j, double value)
         {
-            LastRoads[i] = value;
+            LastRoads[i][j] = value;
         }
 
     }

@@ -31,7 +31,12 @@ namespace NeuralNetwork
                     {
                         item.Attributes[i] = Double.Parse(attributes[i], CultureInfo.InvariantCulture);
                     }
-                    item.Value = Int32.Parse(attributes[Constants.ATTRIBUTES_COUNT]);
+                    switch (Int32.Parse(attributes[Constants.ATTRIBUTES_COUNT]))
+                    {
+                        case 1: item.OutputValue = new int[3] { 1, 0, 0 }; break;
+                        case 2: item.OutputValue = new int[3] { 0, 1, 0 }; break;
+                        case 3: item.OutputValue = new int[3] { 0, 0, 1 }; break;
+                    }
 
                     TrainItems.Add(item);
                 }
@@ -60,7 +65,7 @@ namespace NeuralNetwork
 
                     item.CalculateLayerValues();
 
-                    Debug.WriteLine(String.Format("{0} ---> {1}", String.Join("; ", item.Attributes.Select(e=>e.ToString("0.0"))), item.OutputLayer.Value));
+                    Debug.WriteLine(item.ToDebugString());
                 }
             }
 

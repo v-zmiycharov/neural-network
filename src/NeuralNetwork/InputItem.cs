@@ -8,16 +8,18 @@ namespace NeuralNetwork
     public class InputItem
     {
         public double[] Attributes { get; set; }
-        public int Value { get; set; }
+        public int[] OutputValue { get; set; }
 
         public Neuron[] MiddleLayer { get; set; }
-        public Neuron OutputLayer { get; set; }
+        public Neuron[] OutputLayer { get; set; }
 
         public InputItem()
         {
             this.Attributes = new double[Constants.ATTRIBUTES_COUNT];
 
             this.MiddleLayer = new Neuron[Constants.MIDDLE_LAYER_NEURONS_COUNT];
+
+            this.OutputLayer = new Neuron[Constants.OUTPUT_LAYER_NEURONS_COUNT];
         }
 
         public void CalculateLayerValues()
@@ -31,23 +33,33 @@ namespace NeuralNetwork
                 this.MiddleLayer[i].Value = (double)(1 / (1 + Math.Exp(-sum)));
             }
 
-            this.OutputLayer = new Neuron();
+            for (int i = 0; i < this.OutputLayer.Length; i++)
+            {
+                this.OutputLayer[i] = new Neuron();
 
-            double middleLayerSum = Enumerable.Range(0, Constants.MIDDLE_LAYER_NEURONS_COUNT)
-                    .Sum(start => Roads.GetLast(start) * this.MiddleLayer[start].Value);
-            this.OutputLayer.Value = (double)(1 / (1 + Math.Exp(-middleLayerSum)));
+                double sum = Enumerable.Range(0, Constants.MIDDLE_LAYER_NEURONS_COUNT)
+                    .Sum(start => Roads.GetLast(start, i) * this.MiddleLayer[start].Value);
+                this.OutputLayer[i].Value = (double)(1 / (1 + Math.Exp(-sum)));
+            }
         }
 
         public void CalculateLayerMistakes()
         {
+            for (int i = 0; i < this.OutputLayer.Length; i++)
+            {
+                double newValue = this.OutputLayer[i].Value;
+                this.OutputLayer[i].Mistake = newValue * (1 - newValue) * (this.OutputValue[i] - newValue);
+            }
+
             for (int i = 0; i < this.MiddleLayer.Length; i++)
             {
                 double newValue = this.MiddleLayer[i].Value;
-                this.MiddleLayer[i].Mistake = newValue * (1 - newValue) * 1;
-            }
 
-            double calculatedValue = this.OutputLayer.Value;
-            this.OutputLayer.Mistake = calculatedValue * (1 - calculatedValue) * (this.Value - calculatedValue);
+                double sum = Enumerable.Range(0, Constants.OUTPUT_LAYER_NEURONS_COUNT)
+                    .Sum(outIndex => Roads.GetLast(i, outIndex) * this.OutputLayer[outIndex].Mistake);
+
+                this.MiddleLayer[i].Mistake = newValue * (1 - newValue) * sum;
+            }
         }
 
         public void UpdateRoads()
@@ -63,9 +75,40 @@ namespace NeuralNetwork
 
             for (int i = 0; i < Constants.MIDDLE_LAYER_NEURONS_COUNT; i++)
             {
-                double currentValue = Roads.GetLast(i);
-                Roads.SetLast(i, currentValue + Constants.CALCULATION_M * this.OutputLayer.Mistake * this.MiddleLayer[i].Value);
+                for (int j = 0; j < Constants.OUTPUT_LAYER_NEURONS_COUNT; j++)
+                {
+                    double currentValue = Roads.GetLast(i, j);
+                    Roads.SetLast(i, j, currentValue + Constants.CALCULATION_M * this.OutputLayer[j].Mistake * this.MiddleLayer[i].Value);
+                }
             }
+        }
+
+        public string ToDebugString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(String.Join("; ", this.Attributes.Select(e => e.ToString("0.0"))));
+            sb.Append(" ----> ");
+            for (int i = 0; i < this.OutputLayer.Length; i++)
+            {
+                bool isBigggest = true;
+                for (int j = i + 1; j < this.OutputLayer.Length; j++)
+                {
+                    if(this.OutputLayer[j].Value > this.OutputLayer[i].Value)
+                    {
+                        isBigggest = false;
+                        break;
+                    }
+                }
+                if(isBigggest)
+                {
+                    sb.Append((i + 1).ToString());
+                    break;
+                }
+            }
+            sb.Append(String.Format(" ({0}; {1}; {2})", this.OutputLayer[0].Value.ToString("0.00"), this.OutputLayer[1].Value.ToString("0.00"), this.OutputLayer[2].Value.ToString("0.00")));
+                
+            return sb.ToString();
         }
     }
 }
